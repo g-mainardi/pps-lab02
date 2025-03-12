@@ -52,3 +52,21 @@ object functions extends App:
       case _ => !predicate(str)
     negPredicate
   testStringNeg("Function Method", negMethod)
+
+  println(getSectionString("3c"))
+  def negGeneric[X](predicate: X => Boolean) =
+    def negPredicate(value: X): Boolean = value match
+      case _ => !predicate(value)
+
+    negPredicate
+
+  testStringNeg("Generics Method", negGeneric[String])
+  println("Neg on Integer with Generics Method style")
+  val isZero: Int => Boolean = _ == 0
+  val negIsZero = negGeneric(isZero)
+  val VALUE_1 = 3
+  val VALUE_2 = -7
+  val ZERO_VALUE = 0
+  testTrue(VALUE_1, negIsZero)
+  testTrue(VALUE_2, negIsZero)
+  testFalse(ZERO_VALUE, negIsZero)
