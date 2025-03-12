@@ -30,30 +30,25 @@ object functions extends App:
     case result if expected==result => "ok"
     case _ => "no"
 
-  def testString(str: String, stringPredicate: String => Boolean, expected: Boolean):String =
-    "Test '" + str + "' : " + getResultString(expected, stringPredicate(str))
+  def testValue[X](value: X, predicate: X => Boolean, expected: Boolean): Unit =
+    println("Test '" + value + "' : " + getResultString(expected, predicate(value)))
 
-  def testTrue(str: String, stringPredicate: String => Boolean): String = testString(str, stringPredicate, true)
-  def testFalse(str: String, stringPredicate: String => Boolean): String = testString(str, stringPredicate, false)
+  def testTrue[X](value: X, predicate: X => Boolean): Unit = testValue(value, predicate, true)
+  def testFalse[X](value: X, predicate: X => Boolean): Unit = testValue(value, predicate, false)
 
-  println("Neg with Function Literal style")
-  val negFunLit: (String => Boolean) => (String => Boolean) =
-    (predicate: String => Boolean) => (s => !predicate(s))
+  def testStringNeg(style: String, neg: (String => Boolean) => String => Boolean): Unit =
+    println("Neg on String with " + style + " style")
+    val newNegEmpty = neg(empty)
+    testTrue(STRING1, newNegEmpty)
+    testTrue(STRING2, newNegEmpty)
+    testFalse(EMPTY_STRING, newNegEmpty)
 
-  val notEmptyByFunLit: String => Boolean = negFunLit(empty)
+  val negFunLit: (String => Boolean) => String => Boolean =
+    (predicate: String => Boolean) => s => !predicate(s)
+  testStringNeg("Function Literal", negFunLit)
 
-  println(testTrue(STRING1, notEmptyByFunLit))
-  println(testTrue(STRING2, notEmptyByFunLit))
-  println(testFalse(EMPTY_STRING, notEmptyByFunLit))
-
-  println("Neg with Function Method style")
   def negMethod(predicate: String => Boolean): String => Boolean =
     def negPredicate(str: String): Boolean = str match
       case _ => !predicate(str)
     negPredicate
-
-  val notEmptyByMethod: String => Boolean = negFunLit(empty)
-
-  println(testTrue(STRING1, notEmptyByMethod))
-  println(testTrue(STRING2, notEmptyByMethod))
-  println(testFalse(EMPTY_STRING, notEmptyByMethod))
+  testStringNeg("Function Method", negMethod)
