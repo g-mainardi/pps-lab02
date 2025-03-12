@@ -1,9 +1,9 @@
 package task2
 
 object functions extends App:
-  def getSectionString(section: String): String = "\n----------------"+section+"----------------\n"
+  def printSection(section: String): Unit = println("\n----------------"+section+"----------------\n")
 
-  println(getSectionString("3a"))
+  printSection("3a")
   val positiveFunLit: Int => String =
     case x if x >= 0 => "positive"
     case _ => "negative"
@@ -20,7 +20,7 @@ object functions extends App:
   println("(ii) Method style(pos): " + positiveMethod(POS_VALUE))
   println("(ii) Method style(neg): " + positiveMethod(NEG_VALUE))
 
-  println(getSectionString("3b"))
+  printSection("3b")
   val empty: String => Boolean = _ == ""
   val STRING1 = "foo"
   val STRING2 = "deeee"
@@ -53,7 +53,7 @@ object functions extends App:
     negPredicate
   testStringNeg("Function Method", negMethod)
 
-  println(getSectionString("3c"))
+  printSection("3c")
   def negGeneric[X](predicate: X => Boolean) =
     def negPredicate(value: X): Boolean = value match
       case _ => !predicate(value)
