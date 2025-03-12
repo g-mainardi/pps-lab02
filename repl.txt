@@ -1,0 +1,21 @@
+def divide(x: Double, y:Double): Double = x / y
+def curriedDivide(x: Double)(y: Double): Double = x / y
+-----------------------------------
+def divideByTwo1(x: Double): Double = curriedMult(x)(0.5)
+
+def divideByTwo2(x: Double): Double = curriedDiv(x)(2)
+
+divideByTwo1(48) == divideByTwo2(48)
+
+------------------------------------
+def getSecond[F, P](f: F, p: P): P = p match
+     | case p => p
+     |
+
+val func = (x:Int) => 2
+
+getSecond(func, 3)
+
+-------------------------------------
+
+def apply[F, P](f: F, p: P): P = f(p) !!!!!!!! Non funziona (parameter f does not take parameters)
