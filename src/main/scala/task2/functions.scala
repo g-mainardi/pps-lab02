@@ -70,3 +70,35 @@ object functions extends App:
   testTrue(VALUE_1, negIsZero)
   testTrue(VALUE_2, negIsZero)
   testFalse(ZERO_VALUE, negIsZero)
+
+  printSection("4")
+  def getTuple3String(x: Int, y: Int, z: Int) = "[" + x + ", " + y + ", " + z + "]"
+  def testMultipleValues(testValues: (Boolean, Int, Int, Int) => Unit) =
+    testValues(true, ZERO_VALUE, VALUE_1, VALUE_1)
+    testValues(false, ZERO_VALUE, VALUE_1, VALUE_2)
+    testValues(true, VALUE_1, VALUE_1, VALUE_1)
+    testValues(false, VALUE_1, ZERO_VALUE, VALUE_2)
+  def testRelation(relation: (Int, Int, Int) => Boolean, style: String): Unit =
+    def testValues(expected: Boolean, x: Int, y: Int, z: Int): Unit =
+      println("Test relation on " + getTuple3String(x, y, z) + " in "+ style + " style: " + getResultString(expected, relation(x, y, z)))
+
+    testMultipleValues(testValues)
+
+
+  val relationFunLit: (Int, Int, Int) => Boolean = (x, y, z) => x <= y && y == z
+  testRelation(relationFunLit, "Function Literal")
+
+  def relationMethod(x: Int, y: Int, z: Int): Boolean = x <= y && y == z
+  testRelation(relationMethod, "Method")
+
+  def testCurriedRelation(relation: Int => Int => Int => Boolean, style: String): Unit =
+    def testValues(expected: Boolean, x: Int, y: Int, z: Int): Unit =
+      println("Test curried relation on " + getTuple3String(x, y, z) + " in " + style + " style: " + getResultString(expected, relation(x)(y)(z)))
+
+    testMultipleValues(testValues)
+
+  val relationCurriedFunLit: Int => Int => Int => Boolean = x => y => z => x <= y && y == z
+  testCurriedRelation(relationCurriedFunLit, "Curried Function Literal")
+
+  def relationCurriedMethod(x: Int) (y: Int) (z: Int): Boolean = x <= y && y == z
+  testCurriedRelation(relationCurriedMethod, "Curried Method")
