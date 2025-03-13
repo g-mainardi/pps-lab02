@@ -84,7 +84,6 @@ object functions extends App:
 
     testMultipleValues(testValues)
 
-
   val relationFunLit: (Int, Int, Int) => Boolean = (x, y, z) => x <= y && y == z
   testRelation(relationFunLit, "Function Literal")
 
@@ -102,3 +101,22 @@ object functions extends App:
 
   def relationCurriedMethod(x: Int) (y: Int) (z: Int): Boolean = x <= y && y == z
   testCurriedRelation(relationCurriedMethod, "Curried Method")
+
+  printSection("5")
+  def compose(f: Int => Int, g: Int => Int): Int => Int = x => f(g(x))
+
+  val function1: Int => Int = _ - 1
+  val function2: Int => Int = _ * 2
+  val function3: Int => Int = compose(function1, function2)
+  println("Test compose f(g(x)) on [" + VALUE_1 + "] => " + function3(VALUE_1))
+
+  def genericCompose[X, GX, FGX](f: GX => FGX, g: X => GX): X => FGX = (x: X) => f(g(x))
+  val genericFunction3: Int => Int = genericCompose(function1, function2)
+  println("Test generic compose f(g(x)) on [" + VALUE_1 + "] => " + genericFunction3(VALUE_1))
+
+  val boolToString: Boolean => String =
+    case true => "true"
+    case false => "false"
+  val isZeroString: Int => String = genericCompose(boolToString, isZero)
+  println(VALUE_1 + " == 0? " + isZeroString(VALUE_1))
+  println(ZERO_VALUE + " == 0? " + isZeroString(ZERO_VALUE))
