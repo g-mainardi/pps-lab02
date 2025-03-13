@@ -143,3 +143,36 @@ object functions extends App:
 
   testOnEsclamateDouble("composeThree", composeThree)
   testOnEsclamateDouble("recycledComposeThree", composeThree)
+
+  printSection("7")
+  def testPower(str: String, powerFunction: (Double, Int) => Double): Unit =
+    val DOUBLE_1 = 2.0
+    val DOUBLE_2 = 5.0
+    val EXPONENT_1 = 2
+    val EXPONENT_2 = 3
+
+    def testWithValues(base: Double, exponent: Int): Unit =
+      println("Test " + str + " with [" + base + "^(" + exponent + ")] => " + powerFunction(base, exponent))
+
+    testWithValues(DOUBLE_1, EXPONENT_1)
+    testWithValues(DOUBLE_1, EXPONENT_2)
+    testWithValues(DOUBLE_2, EXPONENT_1)
+    testWithValues(DOUBLE_2, EXPONENT_2)
+
+  def power(base: Double, exponent: Int): Double = exponent match
+    case n if n > 0 => base * power(base, exponent - 1)
+    case n if n == 0 => 1.0
+    case _ => 0.0
+
+  testPower("Recursive Power", power)
+
+  def powerTail(base: Double, exponent: Int): Double =
+    @annotation.tailrec
+    def _power(exponent: Int, acc: Double): Double = exponent match
+      case 0 => 1.0
+      case 1 => acc
+      case _ => _power(exponent - 1, base * acc)
+
+    _power(exponent, 1.0)
+
+  testPower("Recursive Tail Power", powerTail)
