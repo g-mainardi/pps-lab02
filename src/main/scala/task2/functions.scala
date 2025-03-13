@@ -1,5 +1,7 @@
 package task2
 
+import scala.annotation.tailrec
+
 object functions extends App:
   def printSection(section: String): Unit = println("\n----------------"+section+"----------------\n")
 
@@ -176,3 +178,43 @@ object functions extends App:
     _power(exponent, 1.0)
 
   testPower("Recursive Tail Power", powerTail)
+
+  printSection("8")
+  def testEquals(expected: Int, number: Int): Unit =
+    testTrue(number, n => n == expected)
+  val NUMBER1 = 12345
+  val NUMBER2 = 80711
+  val NUMBER3 = 100
+  val NUMBER1_REVERSE = 54321
+  val NUMBER2_REVERSE = 11708
+  val NUMBER3_REVERSE = 1
+
+  def dropLastDigit(n: Int): Int = n / 10
+  println("Test dropLastDigit ")
+  testEquals(123, dropLastDigit(1234))
+  testEquals(1, dropLastDigit(10))
+
+  def getLastDigit(n: Int): Int = n % 10
+  println("Test getLastDigit ")
+  testEquals(4, getLastDigit(1234))
+  testEquals(0, getLastDigit(10))
+
+  def appendDigit(n: Int, digit: Int): Int = n * 10 + digit
+  println("Test appendDigit ")
+  testEquals(1234, appendDigit(123, 4))
+  testEquals(2, appendDigit(0, 2))
+  testEquals(0, appendDigit(0, 0))
+  testEquals(10, appendDigit(1, 0))
+
+  def reverseNumber(n: Int): Int =
+    @annotation.tailrec
+    def _reverse(n: Int, acc: Int): Int = n match
+      case 0 => acc
+      case _ => _reverse(dropLastDigit(n), appendDigit(acc, getLastDigit(n)))
+
+    _reverse(n, 0)
+
+  println("Test reverseNumber ")
+  testEquals(NUMBER1_REVERSE, reverseNumber(NUMBER1))
+  testEquals(NUMBER2_REVERSE, reverseNumber(NUMBER2))
+  testEquals(NUMBER3_REVERSE, reverseNumber(NUMBER3))
