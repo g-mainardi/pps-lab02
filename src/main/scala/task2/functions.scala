@@ -120,3 +120,26 @@ object functions extends App:
   val isZeroString: Int => String = genericCompose(boolToString, isZero)
   println(VALUE_1 + " == 0? " + isZeroString(VALUE_1))
   println(ZERO_VALUE + " == 0? " + isZeroString(ZERO_VALUE))
+
+  printSection("6")
+  val applyZero: (Int => Int) => Int = f => f(ZERO_VALUE)
+
+  def testOnIsAppliedZeroString(str: String, composeFunction: (Boolean => String, Int => Boolean, (Int => Int) => Int) => (Int => Int) => String): Unit =
+    val isAppliedZeroString: (Int => Int) => String =
+      composeFunction(boolToString: Boolean => String, isZero: Int => Boolean, applyZero: (Int => Int) => Int)
+
+    println("Test " + str + " on isAppliedZeroString: " + getResultString(true, isAppliedZeroString(function1) == "false"))
+
+  def testOnEsclamateDouble(str: String, composeFunction: (String => String, Int => String, Int => Int) => Int => String): Unit =
+   val esclamateDouble: Int => String = composeFunction(_ + "!", _.toString, _ * 2)
+
+    println("Test " + str + " on esclamateDouble: " + getResultString(true, esclamateDouble(VALUE_1) == "6!"))
+
+  def composeThree[A, B, C, D](f: C => D, g: B => C, h: A => B): A => D = (a: A) => f(g(h(a)))
+  def recycledComposeThree[A, B, C, D](f: C => D, g: B => C, h: A => B): A => D = (a: A) => genericCompose(f, genericCompose(g, h))(a)
+
+  testOnIsAppliedZeroString("composeThree", composeThree)
+  testOnIsAppliedZeroString("recycledComposeThree", composeThree)
+
+  testOnEsclamateDouble("composeThree", composeThree)
+  testOnEsclamateDouble("recycledComposeThree", composeThree)
