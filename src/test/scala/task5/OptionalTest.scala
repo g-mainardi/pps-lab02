@@ -31,3 +31,15 @@ class OptionalTest:
     val nonEmpty = Optional.Maybe(0)
     val result = Optional.map(nonEmpty, _ + 1)
     assertEquals(1, Optional.orElse(result, 1))
+
+  @Test def curriedMapShouldReturnEmptyWhenEmpty(): Unit =
+    val empty: Optional[Int] = Optional.Empty()
+    val intPredicate: Int => Boolean = _ > 2
+    val result = Optional.curriedMap(empty)(intPredicate)
+    assertTrue(Optional.isEmpty(result))
+
+  @Test def curriedMapShouldReturnTransformedValueWhenNonEmpty(): Unit =
+    val nonEmpty = Optional.Maybe(5)
+    val maybeTrue = Optional.Maybe(true)
+    val intPredicate: Int => Boolean = _ > 2
+    assertEquals(maybeTrue, Optional.curriedMap(nonEmpty)(intPredicate))
