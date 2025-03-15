@@ -235,3 +235,32 @@ object functions extends App:
       case Literal(c) => "" + c
       case Add(e1, e2) => "(" + show(e1) + " + " + show(e2) + ")"
       case Multiply(e1, e2) => "(" + show(e1) + " * " + show(e2) + ")"
+
+  printSection("10 (Test in dedicated package) ")
+  import task5.Optionals.*
+  import Optional.*
+  def map[A, B](optional: Optional[A], f: A => B): Optional[B] = optional match
+    case Maybe(v) => Maybe(f(v))
+    case _ => Empty()
+
+  def curriedMap[A, B](optional: Optional[A])(f: A => B): Optional[B] = map(optional, f)
+
+  /**
+   * filter applies the predicate pred to the value of the optional, if it does not satisfy it, or it is Empty,
+   * returns Empty, otherwise return the same optional.
+   * Example:
+   *
+   * filter(Maybe(1), (x: Int) => x > 2) == Empty()
+   * filter(Maybe(3), (x: Int) => x > 2) == Maybe(3)
+   * filter(Empty(), (x: Int) => x > 2) == Empty()
+   *
+   * @param optional the optional to apply the predicate to
+   * @param pred     the predicate to apply to the value of the optional
+   * @tparam A the type of the optional
+   * @return the same optional received in input if it satisfies the predicate, otherwise Empty
+   */
+  def filter[A](optional: Optional[A], pred: A => Boolean): Optional[A] = optional match
+    case Maybe(v) if pred(v) => Maybe(v)
+    case _ => Empty()
+
+  def curriedFilter[A](optional: Optional[A])(pred: A => Boolean): Optional[A] = filter(optional, pred)
