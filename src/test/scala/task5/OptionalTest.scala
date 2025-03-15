@@ -47,7 +47,7 @@ class OptionalTest:
   @Test def filterShouldReturnEmptyWhenEmpty(): Unit =
     val empty: Optional[Int] = Optional.Empty()
     val intPredicate: Int => Boolean = _ > 2
-    val result = Optional.filter(empty, _ > 2)
+    val result = Optional.filter(empty, intPredicate)
     assertTrue(Optional.isEmpty(result))
 
   @Test def filterShouldReturnEmptyWhenPredicateNotSatisfied(): Unit =
@@ -60,4 +60,22 @@ class OptionalTest:
     val nonEmpty = Optional.Maybe(5)
     val intPredicate: Int => Boolean = _ > 2
     val result = Optional.filter(nonEmpty, intPredicate)
+    assertEquals(nonEmpty, result)
+
+  @Test def curriedFilterShouldReturnEmptyWhenEmpty(): Unit =
+    val empty: Optional[Int] = Optional.Empty()
+    val intPredicate: Int => Boolean = _ > 2
+    val result = Optional.curriedFilter(empty)(intPredicate)
+    assertTrue(Optional.isEmpty(result))
+
+  @Test def curriedFilterShouldReturnEmptyWhenPredicateNotSatisfied(): Unit =
+    val nonEmpty = Optional.Maybe(0)
+    val intPredicate: Int => Boolean = _ > 2
+    val result = Optional.curriedFilter(nonEmpty)(intPredicate)
+    assertTrue(Optional.isEmpty(result))
+
+  @Test def curriedFilterShouldReturnSameValueWhenPredicateSatisfied(): Unit =
+    val nonEmpty = Optional.Maybe(5)
+    val intPredicate: Int => Boolean = _ > 2
+    val result = Optional.curriedFilter(nonEmpty)(intPredicate)
     assertEquals(nonEmpty, result)

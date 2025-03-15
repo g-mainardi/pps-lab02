@@ -84,3 +84,5 @@ object Optionals:
     def filter[A](optional: Optional[A], pred: A => Boolean): Optional[A] = optional match
       case Maybe(v) if pred(v) => Maybe(v)
       case _ => Empty()
+
+    def curriedFilter[A](optional: Optional[A])( pred: A => Boolean): Optional[A] = filter(optional, pred)
